@@ -1,0 +1,10 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discoveryserver
+eureka:
+  client:
+    register-with-eureka: false # 서버에서 이것을 true로 설정하면 자신을 서버로 등록하게 된다.
+    fetch-registry: false # 서버에서 이것을 true로 설정하면 다른 서버들의 정보를 가져오게 된다.
