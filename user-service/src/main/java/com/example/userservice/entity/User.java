@@ -1,0 +1,24 @@
+package com.example.userservice.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter @Setter
+@Table(name = "users")
+public class User extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, length = 50, unique = true)
+    private String userId;
+    @Column(nullable = false, length = 50, unique = true)
+    private String email;
+    @Column(nullable = false, unique = true)
+    private String encryptedPwd;
+    @Column(nullable = false, length = 50)
+    private String name;
+    @Column(nullable = false, length = 50)
+    private String pwd;
+}
