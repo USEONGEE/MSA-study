@@ -1,5 +1,6 @@
 server:
   port: 8000
+
 eureka:
   client:
     fetch-registry: true
@@ -8,15 +9,56 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 
 spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   application:
     name: apigateway-service
+  config:
+    import: configserver:http://localhost:8888
   cloud:
+#    config:
+#      name: ecommerce
     gateway:
       routes:
         - id: user-service
           uri: lb://user-service
           predicates:
+            - Path=/user-service/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET, POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
             - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
         - id: order-service
           uri: lb://order-service
@@ -27,11 +69,6 @@ spring:
           uri: lb://catalog-service
           predicates:
             - Path=/catalog-service/**
-
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/user-service/**
 
         - id: first-service
           uri: lb://my-first-service
@@ -63,3 +100,8 @@ spring:
             preLogger: true
             postLogger: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace, busrefresh

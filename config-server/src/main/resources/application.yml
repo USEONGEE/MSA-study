@@ -1,0 +1,28 @@
+server:
+  port: 8888
+
+spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+  application:
+    name: configserver
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: /Users/mousebook/Documents/study/inflearn/source/MSA/native-file-repo
+        git:
+          uri: file:///Users/mousebook/Documents/study/inflearn/source/MSA/git-local-repo
+          default-label: master
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace, busrefresh
+
+

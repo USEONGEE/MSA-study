@@ -6,6 +6,7 @@ import com.example.userservice.service.UserService;
 import com.example.userservice.vo.RequestUser;
 import com.example.userservice.vo.ResponseUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-service")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final Environment env;
@@ -29,7 +30,13 @@ public class UserController {
 
     @GetMapping("/health_check")
     public String healthCheck() {
-        return String.format("User Service is up and running on PORT %s", env.getProperty("local.server.port"));
+        return String.format("It's Working in User Service" +
+                        ", port(local.server.port)=%s," +
+                        ", port(server.port)=%s" +
+                        ", with token secret=%s" +
+                        ", with token time=%s"
+                , env.getProperty("local.server.port"), env.getProperty("server.port"),
+                env.getProperty("token.secret"), env.getProperty("token.expiration_time"));
     }
 
     @GetMapping("/welcome")
@@ -45,8 +52,10 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity getUsers() {
+        log.info("getUsers called");
         Iterable<User> userByAll = userService.getUserByAll();
         List<ResponseUser> result = new ArrayList<>();
+
         for (User user : userByAll) {
             result.add(ResponseUser.of(UserDto.of(user)));
         }

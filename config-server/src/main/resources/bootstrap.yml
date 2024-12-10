@@ -1,0 +1,6 @@
+encrypt:
+#  key: asdfafdsafdsafdsafdsaf1
+    key-store:
+        location: file://${user.home}/Documents/study/inflearn/source/MSA/keystore/apiEncryptionKey.jks
+        password: test1234
+        alias: apiEncryptionKey

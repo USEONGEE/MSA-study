@@ -20,12 +20,7 @@ public class ResponseUser {
         responseUser.setEmail(userDto.getEmail());
         responseUser.setName(userDto.getName());
         responseUser.setUserId(userDto.getUserId());
-        return responseUser;
-    }
-
-    public static ResponseUser of(UserDto userDto, List<ResponseOrder> orders) {
-        ResponseUser responseUser = of(userDto);
-        responseUser.setOrders(orders);
+        responseUser.setOrders(userDto.getOrders());
         return responseUser;
     }
 }
